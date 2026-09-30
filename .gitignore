@@ -1,0 +1,10 @@
+# Fotos originais em alta (pesadas; o site usa as versões leves em img/)
+fotos/
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Wrangler (Cloudflare)
+.wrangler/

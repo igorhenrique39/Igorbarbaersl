@@ -1,0 +1,663 @@
+/* Igor Barber — cores e fontes seguem identidade/design-guide.md
+   Layout pensado primeiro pro celular; os @media (min-width) ajustam pro computador. */
+
+:root {
+  --preto: #0e0e0e;
+  --branco: #ffffff;
+  --cinza: #f3f2ef;
+  --cinza-linha: #e4e2dd;
+  --texto-suave: #5c5a56;
+  --vermelho: #e4202a;
+  --vermelho-escuro: #c2161f;
+  --azul: #1f3fbf;
+  --verde: #1f8a4c;
+  --claro-80: rgba(255, 255, 255, 0.8);
+  --claro-60: rgba(255, 255, 255, 0.6);
+  --claro-15: rgba(255, 255, 255, 0.15);
+
+  --serif: "Playfair Display", Georgia, serif;
+  --sans: "Archivo", system-ui, sans-serif;
+
+  --largura: 1200px;
+  --respiro: clamp(4rem, 10vw, 8rem);
+  --topo: 64px;
+  --suave: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (min-width: 768px) { :root { --topo: 72px; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: var(--topo); }
+
+body {
+  margin: 0;
+  background: var(--branco);
+  color: var(--preto);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+figure { margin: 0; }
+:focus-visible { outline: 2px solid var(--vermelho); outline-offset: 3px; }
+
+h1, h2 {
+  font-family: var(--serif);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(3.25rem, 13vw, 7rem); }
+h2 { font-size: clamp(2.5rem, 6vw, 3.75rem); }
+h1 em, h2 em { font-style: italic; font-weight: 700; }
+
+.container {
+  width: 100%;
+  max-width: var(--largura);
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+@media (min-width: 768px) { .container { padding-inline: 32px; } }
+
+.rotulo {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+}
+
+/* Botões e links */
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: var(--preto);
+  color: var(--branco);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+  min-height: 52px;
+  padding: 0.9rem 1.6rem;
+  border: 2px solid var(--preto);
+  transition: background-color .25s, border-color .25s, transform .25s var(--suave);
+}
+.botao:hover { background: var(--vermelho); border-color: var(--vermelho); }
+.botao:active { transform: scale(0.98); }
+.botao--pequeno { min-height: 40px; padding: 0.5rem 1rem; font-size: 0.875rem; }
+.botao--destaque { background: var(--vermelho); border-color: var(--vermelho); }
+.botao--destaque:hover { background: var(--vermelho-escuro); border-color: var(--vermelho-escuro); }
+
+.link-seta {
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 2px;
+}
+.link-seta::after { content: " →"; display: inline-block; transition: transform .25s var(--suave); }
+.link-seta:hover::after { transform: translateX(4px); }
+
+/* Listra de poste de barbeiro, tirada da logo */
+.listra {
+  height: 8px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--vermelho) 0 12px,
+    var(--branco) 12px 24px,
+    var(--azul) 24px 36px,
+    var(--branco) 36px 48px
+  );
+}
+
+/* Topo */
+
+.topo {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--branco);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s;
+}
+.topo.rolou { border-color: var(--cinza-linha); }
+.topo__linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: var(--topo);
+}
+.topo__logo img { height: 46px; width: auto; }
+.topo__nav { display: none; gap: 2rem; margin-left: auto; }
+.topo__nav a { text-decoration: none; font-size: 0.9375rem; font-weight: 500; }
+.topo__nav a:hover { color: var(--vermelho); }
+@media (min-width: 768px) { .topo__logo img { height: 52px; } }
+@media (min-width: 900px) { .topo__nav { display: flex; } }
+
+/* Hero: foto da barbearia em tela cheia, texto por cima */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(560px, calc(100svh - var(--topo)), 900px);
+  background: var(--preto);
+  color: var(--branco);
+}
+.hero__fundo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 76% 50%;
+  animation: aproxima 18s var(--suave) both;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 10, 0.95) 0%,
+    rgba(10, 10, 10, 0.8) 34%,
+    rgba(10, 10, 10, 0.5) 58%,
+    rgba(10, 10, 10, 0.1) 82%,
+    rgba(10, 10, 10, 0.35) 100%
+  );
+}
+.hero__conteudo { padding-block: 3rem 2rem; }
+.hero .rotulo { color: var(--claro-80); display: flex; align-items: center; gap: 0.6rem; }
+.hero .rotulo::before { content: ""; width: 1.75rem; height: 2px; background: var(--vermelho); }
+.hero__sub {
+  max-width: 30ch;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--claro-80);
+  margin: 1.25rem 0 1.75rem;
+}
+.hero__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; }
+.hero__acoes .botao { flex: 1 1 100%; }
+.hero__link { display: none; }
+.hero__provas {
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 1.1rem 0 0;
+  border-top: 1px solid var(--claro-15);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--claro-60);
+}
+.hero__provas a { text-decoration: none; color: var(--branco); font-weight: 600; }
+.estrela { color: var(--vermelho); }
+
+.hero__anima { animation: sobe .9s var(--suave) both; animation-delay: calc(var(--i) * 110ms + 150ms); }
+
+@keyframes aproxima { from { transform: scale(1.12); } to { transform: scale(1); } }
+@keyframes sobe { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+@media (min-width: 560px) {
+  .hero__acoes .botao { flex: 0 0 auto; }
+  .hero__link { display: inline; }
+}
+@media (min-width: 900px) {
+  .hero { align-items: center; }
+  .hero__fundo { object-position: 50% 50%; }
+  .hero::after {
+    background:
+      linear-gradient(90deg, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.7) 38%, rgba(10, 10, 10, 0.15) 72%),
+      linear-gradient(to top, rgba(10, 10, 10, 0.5), transparent 40%);
+  }
+  .hero__conteudo { padding-block: 5rem; }
+  .hero__sub { font-size: 1.25rem; }
+}
+
+/* Faixa corrida de serviços */
+
+.faixa {
+  background: var(--preto);
+  color: var(--branco);
+  overflow: hidden;
+  padding-block: 1rem;
+  border-top: 1px solid var(--claro-15);
+}
+.faixa__trilho {
+  display: flex;
+  width: max-content;
+  animation: desliza 32s linear infinite;
+}
+.faixa span {
+  display: inline-flex;
+  align-items: center;
+  gap: 2rem;
+  padding-right: 2rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+  white-space: nowrap;
+}
+.faixa span::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--vermelho);
+}
+@keyframes desliza { to { transform: translateX(-50%); } }
+
+/* Seções */
+
+.secao { padding-block: var(--respiro); }
+.secao--escura { background: var(--preto); color: var(--branco); }
+.secao--cinza { background: var(--cinza); }
+
+.secao__topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+.secao__topo p { margin: 0; max-width: 36ch; color: var(--texto-suave); }
+.secao--escura .secao__topo p { color: var(--claro-60); }
+
+/* Galeria: carrossel de arrastar no celular, grade escalonada no computador */
+
+.galeria {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  margin-inline: -16px;
+  padding-inline: 16px;
+  scroll-padding-inline: 16px;
+  scrollbar-width: none;
+}
+.galeria::-webkit-scrollbar { display: none; }
+.galeria__item {
+  position: relative;
+  flex: 0 0 82%;
+  max-width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  scroll-snap-align: start;
+  background: var(--cinza);
+}
+.galeria__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: zoom-in;
+  transition: transform .9s var(--suave);
+}
+.galeria__item figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 4rem 1.1rem 1.1rem;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.82), transparent);
+  color: var(--branco);
+  pointer-events: none;
+}
+.galeria__nome { font-family: var(--serif); font-weight: 700; font-size: 1.375rem; line-height: 1.2; }
+.galeria__tipo { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--claro-80); }
+
+.galeria__controle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.galeria__controle > span:last-child { color: var(--texto-suave); font-weight: 500; }
+.galeria__barra { position: relative; flex: 1; height: 2px; background: var(--cinza-linha); overflow: hidden; }
+.galeria__barra span {
+  position: absolute;
+  inset: 0;
+  background: var(--preto);
+  transform-origin: left;
+  transform: scaleX(0.3333);
+  transition: transform .35s var(--suave);
+}
+
+@media (min-width: 768px) {
+  .galeria {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
+    gap: 16px;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+  .galeria__item:nth-child(2) { margin-top: 4.5rem; }
+  .galeria__item:hover img { transform: scale(1.06); }
+  .galeria__item figcaption { transform: translateY(8px); transition: transform .5s var(--suave); }
+  .galeria__item:hover figcaption { transform: none; }
+  .galeria__controle { display: none; }
+}
+
+/* Serviços */
+
+.menu-grupos { display: grid; gap: 2.75rem 5rem; }
+.menu-grupo__titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.25rem;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--claro-60);
+}
+.selo {
+  padding: 0.2rem 0.55rem;
+  background: var(--vermelho);
+  color: var(--branco);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+}
+.menu-grupo--combos { border: 1px solid var(--claro-15); padding: 1.25rem 1.25rem 0.25rem; }
+.menu-grupo--combos li:last-child { border-bottom: 0; }
+
+@media (min-width: 860px) {
+  .menu-grupos { grid-template-columns: 1fr 1fr; }
+  .menu-grupo--combos { grid-column: 1 / -1; padding: 1.5rem 1.75rem 0.5rem; }
+  .menu-grupo--combos .menu { display: grid; grid-template-columns: 1fr 1fr; column-gap: 5rem; }
+  .menu-grupo--combos .menu li { border-bottom: 0; }
+}
+
+.menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.menu li {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-block: 1.1rem;
+  border-bottom: 1px solid var(--claro-15);
+}
+.menu__nome {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+  line-height: 1.2;
+  transition: transform .35s var(--suave);
+}
+.menu__linha { flex: 1; border-bottom: 1px dotted var(--claro-15); transform: translateY(-0.35em); transition: border-color .35s; }
+.menu__preco { font-weight: 600; font-size: 1.125rem; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
+.menu__preco small { display: block; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--claro-60); line-height: 1.2; }
+.menu__preco s { margin-right: 0.35rem; font-weight: 400; color: var(--claro-60); text-decoration-thickness: 1px; }
+.menu li:hover .menu__nome { transform: translateX(6px); }
+.menu li:hover .menu__linha { border-color: var(--claro-60); }
+.menu__nota { margin: 2rem 0 0; max-width: 52ch; color: var(--claro-60); }
+
+/* O barbeiro */
+
+.sobre { display: grid; gap: 2.75rem; align-items: center; }
+.sobre__foto {
+  position: relative;
+  width: calc(100% - 12px);
+  max-width: 500px;
+  margin: 0 12px 12px 0;
+}
+.sobre__foto::before {
+  content: "";
+  position: absolute;
+  inset: 12px -12px -12px 12px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--vermelho) 0 12px,
+    var(--branco) 12px 24px,
+    var(--azul) 24px 36px,
+    var(--branco) 36px 48px
+  );
+}
+.sobre__moldura { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--cinza); }
+.sobre__moldura img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.sobre__foto figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 5rem 1.25rem 1.1rem;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.7), transparent);
+  color: var(--branco);
+}
+.sobre__foto figcaption .rotulo { color: var(--claro-80); margin-bottom: 0.25rem; }
+.sobre__foto h2 { font-size: clamp(4.5rem, 20vw, 7.5rem); line-height: 0.85; }
+
+.sobre__texto > p { max-width: 50ch; margin: 0 0 1rem; color: var(--texto-suave); }
+.sobre__texto > p:first-child { font-size: 1.25rem; line-height: 1.5; color: var(--preto); }
+
+.fatos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 3.5rem;
+  margin: 2.25rem 0 0;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--cinza-linha);
+}
+.fatos dt {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 5vw, 3.25rem);
+  font-variant-numeric: lining-nums;
+  line-height: 1;
+}
+.fatos dd { margin: 0.4rem 0 0; font-size: 0.9375rem; color: var(--texto-suave); }
+.fatos a { color: inherit; text-decoration-color: var(--cinza-linha); text-underline-offset: 3px; }
+.fatos a:hover { color: var(--vermelho); }
+
+@media (min-width: 860px) {
+  .sobre { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 5rem; }
+}
+
+/* Onde fica */
+
+.info { display: grid; gap: 2.25rem; }
+.info p { margin: 0 0 0.75rem; }
+.info .rotulo { margin-bottom: 0.75rem; color: var(--texto-suave); }
+.info a:not(.link-seta) { text-decoration: none; }
+.info a:not(.link-seta):hover { color: var(--vermelho); }
+@media (min-width: 768px) { .info { grid-template-columns: repeat(3, 1fr); } }
+
+.horario { margin: 0; max-width: 340px; }
+.horario div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.4rem;
+  border-bottom: 1px solid var(--cinza-linha);
+}
+.horario dt, .horario dd { margin: 0; }
+.horario dd { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.horario .hoje { font-weight: 600; }
+.horario .hoje dt::after { content: " · hoje"; font-weight: 500; color: var(--texto-suave); }
+
+.info .horario__agora {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.horario__agora::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--vermelho);
+}
+.horario__agora.aberto::before { background: var(--verde); box-shadow: 0 0 0 4px rgba(31, 138, 76, 0.18); }
+
+/* Chamada final */
+
+.cta { background: var(--preto); color: var(--branco); padding-block: var(--respiro); }
+.cta__linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.cta h2 { font-size: clamp(2.75rem, 9vw, 5.5rem); }
+.cta .botao { flex: 1 1 100%; }
+@media (min-width: 560px) { .cta .botao { flex: 0 0 auto; } }
+
+/* Rodapé */
+
+.rodape { background: var(--preto); color: var(--claro-60); font-size: 0.9375rem; }
+.rodape__linha {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-block: 2rem 6.5rem;
+}
+.rodape p { margin: 0; }
+.rodape a { text-decoration: none; }
+.rodape a:hover { color: var(--branco); }
+@media (min-width: 768px) { .rodape__linha { padding-block: 2rem; } }
+
+/* Agendar fixo: barra no celular, botão redondo no computador */
+
+.barra-agendar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem 16px calc(1rem + env(safe-area-inset-bottom, 0px));
+  background: var(--vermelho);
+  color: var(--branco);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(110%);
+  transition: transform .4s var(--suave);
+}
+.mostrar-agendar .barra-agendar { transform: none; }
+
+.whats-flutuante {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 30;
+  display: none;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--preto);
+  color: var(--branco);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity .3s, transform .3s var(--suave), background-color .2s;
+}
+.whats-flutuante:hover { background: var(--vermelho); }
+.mostrar-agendar .whats-flutuante { opacity: 1; transform: none; pointer-events: auto; }
+
+@media (min-width: 768px) {
+  .barra-agendar { display: none; }
+  .whats-flutuante { display: grid; }
+}
+
+/* Lightbox */
+
+.lightbox {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  max-width: min(92vw, 1000px);
+  max-height: 92vh;
+  cursor: zoom-out;
+}
+.lightbox::backdrop { background: rgba(0, 0, 0, 0.9); }
+.lightbox img { max-height: 92vh; width: auto; margin: auto; }
+
+/* Zoom suave das fotos ao rolar (navegadores com scroll-driven animations).
+   Usa a propriedade `scale` pra não brigar com o `transform` do hover. */
+@supports (animation-timeline: view()) {
+  .zoom-rolagem {
+    animation: desamplia linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 45%;
+  }
+  @keyframes desamplia { from { scale: 1.18; } to { scale: 1; } }
+}
+
+/* Abertura: tela branca com a logo no centro, que depois voa pro topo */
+
+html { scrollbar-gutter: stable; }
+.intro { display: none; }
+.intro-ativa { overflow: hidden; }
+.intro-ativa .intro { display: block; position: fixed; inset: 0; z-index: 100; }
+.intro-ativa .topo__logo img { visibility: hidden; }
+.intro-ativa:not(.intro-revelando) :is(.hero__anima, .hero__fundo) { animation-play-state: paused; }
+
+.intro__painel { position: absolute; inset: 0; background: var(--branco); }
+.intro__logo {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: min(62vw, 340px);
+  height: auto;
+  translate: -50% -50%;
+  transform-origin: 0 0;
+  animation: intro-entra .8s var(--suave) both;
+}
+.intro__listra {
+  position: fixed;
+  left: 50%;
+  top: calc(50% + min(20.8vw, 114px) + 28px);
+  width: min(36vw, 180px);
+  height: 4px;
+  translate: -50% 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--vermelho) 0 8px,
+    var(--branco) 8px 16px,
+    var(--azul) 16px 24px,
+    var(--branco) 24px 32px
+  );
+  transform-origin: left;
+  animation: intro-carrega 1.2s .2s var(--suave) both;
+}
+@keyframes intro-entra { from { opacity: 0; scale: 0.9; } to { opacity: 1; scale: 1; } }
+@keyframes intro-carrega { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
