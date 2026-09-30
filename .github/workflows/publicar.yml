@@ -1,6 +1,7 @@
-# Publica o site no Cloudflare Pages (https://igorbarber.pages.dev)
-# toda vez que algo é salvo na branch main. Também dá pra rodar à mão
-# na aba Actions → "Publicar site" → Run workflow.
+# Publica no Cloudflare Pages toda vez que algo é salvo na branch main:
+#   - o site (tudo, menos a pasta links/)  → https://igorbarber.pages.dev
+#   - a página de links (pasta links/)     → https://igorbarber-links.pages.dev
+# Também dá pra rodar à mão na aba Actions → "Publicar site" → Run workflow.
 #
 # Precisa do segredo CLOUDFLARE_API_TOKEN em Settings → Secrets and
 # variables → Actions. Sem ele, a publicação é pulada (não dá erro).
@@ -37,8 +38,12 @@ jobs:
 
       - name: Separar os arquivos do site
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
-        run: rsync -a --exclude='.git*' --exclude='.github' --exclude='README.md' --exclude='publicar' ./ publicar/
+        run: rsync -a --exclude='.git*' --exclude='.github' --exclude='README.md' --exclude='publicar' --exclude='links' ./ publicar/
 
-      - name: Publicar no Cloudflare Pages
+      - name: Publicar o site
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
         run: npx --yes wrangler@4 pages deploy publicar --project-name igorbarber --branch main
+
+      - name: Publicar a página de links
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
+        run: npx --yes wrangler@4 pages deploy links --project-name igorbarber-links --branch main

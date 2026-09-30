@@ -14,6 +14,7 @@ No ar em **https://igorbarber.pages.dev** (Cloudflare Pages).
 | `js/main.js` | Abertura com a logo, carrossel de fotos, "aberto agora", botão de agendar |
 | `img/` | Fotos e logo usadas no site (versões leves, em JPG) |
 | `robots.txt` e `sitemap.xml` | Arquivos que ajudam o Google a encontrar o site |
+| `links/` | Página de links da bio do Instagram (WhatsApp, site, Instagram), publicada à parte em **https://igorbarber-links.pages.dev** |
 
 ## Mudanças mais comuns
 
