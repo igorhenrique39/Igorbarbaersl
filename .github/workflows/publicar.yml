@@ -1,0 +1,44 @@
+# Publica o site no Cloudflare Pages (https://igorbarber.pages.dev)
+# toda vez que algo é salvo na branch main. Também dá pra rodar à mão
+# na aba Actions → "Publicar site" → Run workflow.
+#
+# Precisa do segredo CLOUDFLARE_API_TOKEN em Settings → Secrets and
+# variables → Actions. Sem ele, a publicação é pulada (não dá erro).
+
+name: Publicar site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: publicar
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: cffcd049d5a53a4973c1733640fff2bc
+    steps:
+      - name: Avisar se falta o token
+        if: ${{ env.CLOUDFLARE_API_TOKEN == '' }}
+        run: echo "::warning::Falta o segredo CLOUDFLARE_API_TOKEN — o site não foi publicado."
+
+      - uses: actions/checkout@v4
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
+
+      - uses: actions/setup-node@v4
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
+        with:
+          node-version: 22
+
+      - name: Separar os arquivos do site
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
+        run: rsync -a --exclude='.git*' --exclude='.github' --exclude='README.md' --exclude='publicar' ./ publicar/
+
+      - name: Publicar no Cloudflare Pages
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
+        run: npx --yes wrangler@4 pages deploy publicar --project-name igorbarber --branch main

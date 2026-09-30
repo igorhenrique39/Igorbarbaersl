@@ -37,6 +37,12 @@ Troque só o valor. Nos combos, o valor riscado (`<s>...</s>`) é a soma dos ser
 
 O site fica no Cloudflare Pages, projeto `igorbarber`, na conta do Igor.
 
+**Automático (jeito normal):** é só salvar a mudança na branch `main` aqui no GitHub — pelo site do GitHub (ícone de lápis → "Commit changes") ou com `git push`. Em cerca de 1 minuto o site no ar é atualizado. Dá pra acompanhar na aba **Actions** (bolinha verde = publicado; vermelha = deu erro, clique pra ver o motivo).
+
+A automação está em `.github/workflows/publicar.yml` e usa o segredo `CLOUDFLARE_API_TOKEN` (Settings → Secrets and variables → Actions).
+
+Se precisar publicar sem o GitHub:
+
 **Pelo painel (sem instalar nada):** dash.cloudflare.com → Workers & Pages → `igorbarber` → **Create deployment** → arraste a pasta do site (só `index.html`, `robots.txt`, `sitemap.xml`, `css`, `js` e `img`).
 
 **Pelo terminal (precisa do Node.js):**
