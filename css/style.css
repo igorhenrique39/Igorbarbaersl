@@ -22,6 +22,7 @@
   --respiro: clamp(4rem, 10vw, 8rem);
   --topo: 64px;
   --suave: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --raio: 10px;
 }
 @media (min-width: 768px) { :root { --topo: 72px; } }
 
@@ -88,11 +89,12 @@ h1 em, h2 em { font-style: italic; font-weight: 700; }
   min-height: 52px;
   padding: 0.9rem 1.6rem;
   border: 2px solid var(--preto);
+  border-radius: var(--raio);
   transition: background-color .25s, border-color .25s, transform .25s var(--suave);
 }
 .botao:hover { background: var(--vermelho); border-color: var(--vermelho); }
 .botao:active { transform: scale(0.98); }
-.botao--pequeno { min-height: 40px; padding: 0.5rem 1rem; font-size: 0.875rem; }
+.botao--pequeno { min-height: 40px; padding: 0.5rem 1rem; font-size: 0.875rem; border-radius: 8px; }
 .botao--destaque { background: var(--vermelho); border-color: var(--vermelho); }
 .botao--destaque:hover { background: var(--vermelho-escuro); border-color: var(--vermelho-escuro); }
 
@@ -376,6 +378,7 @@ h1 em, h2 em { font-style: italic; font-weight: 700; }
 }
 .selo {
   padding: 0.2rem 0.55rem;
+  border-radius: 4px;
   background: var(--vermelho);
   color: var(--branco);
   font-size: 0.6875rem;
@@ -545,24 +548,26 @@ h1 em, h2 em { font-style: italic; font-weight: 700; }
 .rodape a:hover { color: var(--branco); }
 @media (min-width: 768px) { .rodape__linha { padding-block: 2rem; } }
 
-/* Agendar fixo: barra no celular, botão redondo no computador */
+/* Agendar fixo: botão flutuante largo no celular, botão redondo no computador */
 
 .barra-agendar {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   z-index: 30;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  padding: 1rem 16px calc(1rem + env(safe-area-inset-bottom, 0px));
+  padding: 1rem 16px;
+  border-radius: var(--raio);
   background: var(--vermelho);
   color: var(--branco);
   font-weight: 600;
   text-decoration: none;
-  transform: translateY(110%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  transform: translateY(calc(100% + 40px));
   transition: transform .4s var(--suave);
 }
 .mostrar-agendar .barra-agendar { transform: none; }
